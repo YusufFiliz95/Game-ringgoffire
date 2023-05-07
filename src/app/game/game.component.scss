@@ -25,14 +25,14 @@
   cursor: pointer;
   transition: all 150ms ease-in-out;
   transform: rotate(350deg);
-  &:hover{
+  &:hover {
     transform: rotate(365deg) scale(1.1) translateY(-20px);
   }
 }
 
 .pick-card {
   animation: pick-card-animation 900ms ease-in-out;
-  transform: scale(1) translateX(120px) translateY(-180px)rotate(-10deg);
+  transform: scale(1) translateX(140px) translateY(-180px) rotate(-10deg);
 }
 
 @keyframes pick-card-animation {
@@ -46,6 +46,6 @@
     transform: scale(1.7);
   }
   100% {
-    transform: scale(1) translateX(120px) translateY(-180px) rotate(-10deg);
+    transform: scale(1) translateX(140px) translateY(-180px) rotate(-10deg);
   }
 }
