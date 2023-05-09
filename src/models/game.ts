@@ -15,6 +15,11 @@ export class Game {
   }
 }
 
+/**
+ * This function shuffles an array of strings randomly.
+ * @param {string[]} array - The input array of strings that needs to be shuffled.
+ * @returns an array of strings that has been shuffled randomly.
+ */
 function shuffle(array: string[]): string[] {
   let currentIndex = array.length,  randomIndex;
 
