@@ -21,6 +21,11 @@
   }
 }
 
+.played-card {
+  right: 20px;
+  transform: scale(1) translateX(140px) translateY(-180px) rotate(-10deg);
+}
+
 .top-card {
   cursor: pointer;
   transition: all 150ms ease-in-out;
@@ -48,4 +53,9 @@
   100% {
     transform: scale(1) translateX(140px) translateY(-180px) rotate(-10deg);
   }
+}
+
+.player-postion {
+  position: absolute;
+  right: 0;
 }
