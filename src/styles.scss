@@ -6,3 +6,21 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-typography h1 {
+  font-size: initial;
+  font-weight: initial;
+  line-height: initial;
+  font-family: Roboto, sans-serif;
+  letter-spacing: initial;
+  margin: initial;
+}
+
+.mat-typography h3 {
+  font-size: initial;
+  font-weight: initial;
+  line-height: initial;
+  font-family: Roboto, sans-serif;
+  letter-spacing: initial;
+  margin: initial;
+  }
