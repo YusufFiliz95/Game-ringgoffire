@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "y-f-ringoffire": {
+      "hosting": {
+        "ringoffire": [
+          "y-f-ringoffire"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "y-f-ringoffire"
+  }
+}
