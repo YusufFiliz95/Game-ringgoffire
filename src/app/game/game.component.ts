@@ -3,8 +3,6 @@ import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { Firestore } from '@angular/fire/firestore';
-import { collectionData, collection } from '@angular/fire/firestore';
-import { addDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { doc, getDoc } from "@angular/fire/firestore";
 @Component({
@@ -44,8 +42,6 @@ export class GameComponent implements OnInit {
 
   newGame() {
     this.game = new Game();
-/*     const itemCollection = collection(this.firestore, 'games');
-    addDoc(itemCollection, this.game.toJSON()); */
   }
 
   takeCard() {
