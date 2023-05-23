@@ -5,6 +5,8 @@ import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player
 import { Firestore } from '@angular/fire/firestore';
 import { collectionData, collection } from '@angular/fire/firestore';
 import { addDoc } from '@angular/fire/firestore';
+import { ActivatedRoute } from '@angular/router';
+import { doc, getDoc } from "@angular/fire/firestore";
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -18,19 +20,32 @@ export class GameComponent implements OnInit {
 
   ngOnInit(): void {
     this.newGame();
-    const itemCollection = collection(this.firestore, 'games');
-    collectionData(itemCollection).subscribe((game) => {
-      console.log('Game updated', game);
+    this.route.params.subscribe((params) => {
+      const docRef = doc(this.firestore, 'games', params['id']);
+      getDoc(docRef).then((docData) => {
+        if (docData.exists()) {
+          this.game = docData.data() as Game;
+          console.log('Game data: ', docData.data());
+        } else {
+          console.log('No such document!');
+        }
+      }).catch((error) => {
+        console.log('Error getting document:', error);
+      });
     });
   }
 
-  constructor(private firestore: Firestore, public dialog: MatDialog) {}
 
+  constructor(
+    private route: ActivatedRoute,
+    private firestore: Firestore,
+    public dialog: MatDialog
+  ) {}
 
   newGame() {
     this.game = new Game();
-    const itemCollection = collection(this.firestore, 'games');
-    addDoc(itemCollection, this.game.toJSON());
+/*     const itemCollection = collection(this.firestore, 'games');
+    addDoc(itemCollection, this.game.toJSON()); */
   }
 
   takeCard() {
@@ -41,7 +56,8 @@ export class GameComponent implements OnInit {
       this.pickCardAnimation = true;
 
       this.game.currentPlayer++;
-      this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
+      this.game.currentPlayer =
+        this.game.currentPlayer % this.game.players.length;
 
       setTimeout(() => {
         this.game.playedCard.push(this.currentCard);
@@ -54,7 +70,7 @@ export class GameComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
 
     dialogRef.afterClosed().subscribe((name: string) => {
-      if (name && name.length > 0){
+      if (name && name.length > 0) {
         this.game.players.push(name);
       }
     });
