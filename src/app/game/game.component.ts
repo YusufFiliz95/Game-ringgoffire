@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
-import { Firestore, doc, getDoc, updateDoc, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, doc, onSnapshot } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { setDoc } from '@angular/fire/firestore';
 
@@ -12,8 +12,6 @@ import { setDoc } from '@angular/fire/firestore';
   styleUrls: ['./game.component.scss'],
 })
 export class GameComponent implements OnInit {
-  pickCardAnimation = false;
-  currentCard: string = '';
   gameid: string;
   game: Game;
 
@@ -23,17 +21,20 @@ export class GameComponent implements OnInit {
       this.gameid = params['id'];
       const docRef = doc(this.firestore, 'games', this.gameid);
 
-      const unsub = onSnapshot(docRef, (docData) => {
-        if (docData.exists()) {
-          this.game = docData.data() as Game;
-          console.log('Game data: ', docData.data());
+      const unsub = onSnapshot(
+        docRef,
+        (docData) => {
+          if (docData.exists()) {
+            this.game = docData.data() as Game;
+            console.log('Game data: ', docData.data());
+          }
+        },
+        (error) => {
+          console.log('Error getting document:', error);
         }
-      }, (error) => {
-        console.log('Error getting document:', error);
-      });
+      );
     });
   }
-
 
   constructor(
     private route: ActivatedRoute,
@@ -48,19 +49,16 @@ export class GameComponent implements OnInit {
   takeCard() {
     if (this.game.players.length < 2) {
       this.openDialog();
-    } else if (!this.pickCardAnimation) {
-      this.currentCard = this.game.stack.pop();
-      this.saveGame();
-      this.pickCardAnimation = true;
-
+    } else if (!this.game.pickCardAnimation) {
+      this.game.currentCard = this.game.stack.pop();
+      this.game.pickCardAnimation = true;
       this.game.currentPlayer++;
-      this.game.currentPlayer =
-        this.game.currentPlayer % this.game.players.length;
-
+      this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
+      this.saveGame();
       setTimeout(() => {
-        this.game.playedCard.push(this.currentCard);
-        this.pickCardAnimation = false;
-                this.saveGame();
+        this.game.playedCard.push(this.game.currentCard);
+        this.game.pickCardAnimation = false;
+        this.saveGame();
       }, 1000);
     }
   }
@@ -83,13 +81,13 @@ export class GameComponent implements OnInit {
       players: this.game.players,
       playedCard: this.game.playedCard,
       currentPlayer: this.game.currentPlayer,
+      pickCardAnimation: this.game.pickCardAnimation,
+      currentCard: this.game.currentCard,
     };
     try {
       await setDoc(gameDoc, gameData);
     } catch (error) {
-      console.error("Error updating document: ", error);
+      console.error('Error updating document: ', error);
     }
   }
-
-
 }
