@@ -1,5 +1,8 @@
 <app-player *ngFor="let player of game.players let i = index" [ngStyle]="{'top.px': 100 + (i * 90)}" [name]="player"
-  [playerActive]="i == game.currentPlayer" class="player-postion"></app-player>
+  [playerActive]="i == game.currentPlayer" class="player-postion hide-mobile"></app-player>
+
+  <app-player-mobile *ngFor="let player of game.players let i = index" [ngStyle]="{'left.px': 10 + (i * 90), 'top.px' : 0}" [name]="player"
+  [playerActive]="i == game.currentPlayer" class="player-postion hide-desktop"></app-player-mobile>
 
 <div class="board">
   <img class="background-image" src="assets/img/board.jpg" alt="Board image">
