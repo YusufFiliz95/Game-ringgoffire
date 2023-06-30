@@ -4,6 +4,7 @@
 
 mat-card {
   @media (max-width: 1120px) {
+    position: absolute;
     left: 0;
     right: 0;
     bottom: 0;

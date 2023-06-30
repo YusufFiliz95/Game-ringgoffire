@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
-import { Firestore, doc, onSnapshot } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
-import { setDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-game',
@@ -19,26 +17,17 @@ export class GameComponent implements OnInit {
     this.newGame();
     this.route.params.subscribe((params) => {
       this.gameid = params['id'];
-      const docRef = doc(this.firestore, 'games', this.gameid);
-
-      const unsub = onSnapshot(
-        docRef,
-        (docData) => {
-          if (docData.exists()) {
-            this.game = docData.data() as Game;
-            console.log('Game data: ', docData.data());
-          }
-        },
-        (error) => {
-          console.log('Error getting document:', error);
-        }
-      );
+      // Lesen Sie das Spiel aus dem lokalen Speicher
+      let localGame = localStorage.getItem('games-' + this.gameid);
+      if (localGame) {
+        this.game = JSON.parse(localGame) as Game;
+        console.log('Game data: ', this.game);
+      }
     });
   }
 
   constructor(
     private route: ActivatedRoute,
-    private firestore: Firestore,
     public dialog: MatDialog
   ) {}
 
@@ -74,20 +63,8 @@ export class GameComponent implements OnInit {
     });
   }
 
-  async saveGame() {
-    const gameDoc = doc(this.firestore, 'games', this.gameid);
-    const gameData = {
-      stack: this.game.stack,
-      players: this.game.players,
-      playedCard: this.game.playedCard,
-      currentPlayer: this.game.currentPlayer,
-      pickCardAnimation: this.game.pickCardAnimation,
-      currentCard: this.game.currentCard,
-    };
-    try {
-      await setDoc(gameDoc, gameData);
-    } catch (error) {
-      console.error('Error updating document: ', error);
-    }
+  saveGame() {
+    // Speichern Sie das Spiel im lokalen Speicher
+    localStorage.setItem('games-' + this.gameid, JSON.stringify(this.game));
   }
 }
